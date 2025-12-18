@@ -6,8 +6,13 @@ public class Enemy : MonoBehaviour
     public Transform player;
     public float speed = 3f;
     public float damage = 0.2f;
+    public float knockbackForce = 3f;
+    public float knockbackStopTime = 0.3f;
 
     private Rigidbody2D rb;
+    private Vector3 direction;
+    private bool isKnockedBack = false;
+    private float knockbackTimer = 0f;
 
     void Start()
     {
@@ -16,11 +21,36 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
+        if (isKnockedBack)
+        {
+            knockbackTimer -= Time.deltaTime;
+            if (knockbackTimer <= 0)
+            {
+                isKnockedBack = false;
+            }
+            return;
+        }
+
         if (isChasing && player != null)
         {
             // Berechne Richtung zum Player
-            Vector3 direction = (player.position - transform.position).normalized;
+            direction = (player.position - transform.position).normalized;
+        }
+        else
+        {
+            direction = Vector3.zero;
+        }
+    }
 
+    void FixedUpdate()
+    {
+        if (isKnockedBack)
+        {
+            return;
+        }
+
+        if (isChasing && player != null)
+        {
             // Bewege Enemy in Richtung Player
             rb.linearVelocity = new Vector2(direction.x * speed, rb.linearVelocity.y);
         }
@@ -40,6 +70,13 @@ public class Enemy : MonoBehaviour
             {
                 playerScript.health -= damage;
             }
+
+            float direction = transform.position.x - collision.transform.position.x;
+            direction = direction > 0 ? 1 : -1;
+            rb.linearVelocity = new Vector2(direction * knockbackForce, 0);
+
+            isKnockedBack = true;
+            knockbackTimer = knockbackStopTime;
         }
     }
 
