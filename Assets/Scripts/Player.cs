@@ -7,6 +7,8 @@ using System.Collections;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] private Animator animator;
+
     public float stamina = 100;
     public float speed = 5f;
     public float jumpForce = 5f;
@@ -18,12 +20,17 @@ public class Player : MonoBehaviour
     public float wallSlide = 1f;
     public Vector3 spawnPosition;
     public float knockbackForce = 5f;
+    public float dashSpeed = 15f;
+    public float dashDuration = 0.2f;
+    public float dashCooldown = 1f;
+    public float wallJumpForceX = 8f;
+    public float wallJumpForceY = 8f;
 
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
     private bool isJumping = false;
-    private bool canJump = true;
-    private bool isTouchingWall = false;
+    private bool canJump = false;
+    public bool isTouchingWall = false;
     public bool canMove = true;
     public bool canAttack = true;
     public bool canSprint = false;
@@ -31,6 +38,12 @@ public class Player : MonoBehaviour
     private float staminaRegenTimer = 0.2f;
     private float staminaRegenCooldown = 0.2f;
     private bool isConsumingStamina = false;
+    private bool isDashing = false;
+    private float dashTimer = 0f;
+    private float dashCooldownTimer = 0f;
+    private bool justWallJumped = false;
+    private float wallJumpControlTimer = 0f;
+    private float wallJumpControlDuration = 0.3f;
 
     private float move = 0f;
 
@@ -52,13 +65,81 @@ public class Player : MonoBehaviour
         move = 0f;
 
         // Bewegung Input
-        if (canMove)
+        if (canMove && !isDashing && !justWallJumped)
         {
             if (Input.GetKey(KeyCode.A))
                 move = -1f;
             else if (Input.GetKey(KeyCode.D))
                 move = 1f;
         }
+
+        // Wall Jump Control Timer
+        if (justWallJumped)
+        {
+            wallJumpControlTimer -= Time.deltaTime;
+            if (wallJumpControlTimer <= 0)
+            {
+                justWallJumped = false;
+            }
+        }
+
+        // Dash
+        if (Input.GetKeyDown(KeyCode.LeftShift) && stamina >= 10 && dashCooldownTimer <= 0 && !isDashing)
+        {
+            UseStamina(10f);
+            isDashing = true;
+            dashTimer = dashDuration;
+            dashCooldownTimer = dashCooldown;
+        }
+
+        // Dash Timer
+        if (isDashing)
+        {
+            dashTimer -= Time.deltaTime;
+            if (dashTimer <= 0)
+            {
+                isDashing = false;
+            }
+        }
+
+        // Dash Cooldown
+        if (dashCooldownTimer > 0)
+        {
+            dashCooldownTimer -= Time.deltaTime;
+        }
+
+        // Wand Stamina Verbrauch
+        if (isTouchingWall && !canJump)
+        {
+            UseStamina(5f * Time.deltaTime);
+        }
+
+        // ANIMATOR HEY 
+        if (move != 0f && canJump)
+            animator.SetBool("isWalking", true);
+        else
+            animator.SetBool("isWalking", false);
+
+        if (!canJump)
+            animator.SetBool("isJumping", true);
+        else
+            animator.SetBool("isJumping", false);
+        // Running animation 
+        if (speed > 5f && move != 0f && canJump)
+            animator.SetBool("isRunning", true);
+        else
+            animator.SetBool("isRunning", false);
+        // Jumping animation
+        animator.SetBool("isJumping", isJumping && !isTouchingWall);
+
+        //Wallhold animation
+
+        animator.SetBool("isWallsliding", isTouchingWall);
+        // Flip Sprite
+        if (move < 0f && !justWallJumped)
+            spriteRenderer.flipX = true;
+        else if (move > 0f && !justWallJumped)
+            spriteRenderer.flipX = false;
 
         // Attack
         if (Input.GetKey(KeyCode.J))
@@ -67,37 +148,29 @@ public class Player : MonoBehaviour
             playerAttack();
         }
 
-        // Sprinten
-        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.A) && stamina > 0 && canSprint ||
-            Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.D) && stamina > 0 && canSprint)
-        {
-            if (stamina > 0.1f)
-            {
-                speed = 10f;
-                UseStamina(2f * Time.deltaTime);
-            }
-        }
-
-        if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            speed = 5f;
-        }
-
         // Springen
-        if (Input.GetKeyDown(KeyCode.Space) && (canJump || isTouchingWall) && stamina >= 15)
+        if (Input.GetKeyDown(KeyCode.Space) && isTouchingWall)
         {
-            UseStamina(5f);
+            // Walljump ohne Stamina Kosten
             isJumping = true;
             jumpTimeCounter = maxJumpTime;
+            justWallJumped = true;
+            wallJumpControlTimer = wallJumpControlDuration;
 
-            if (!isTouchingWall)
-            {
-                canJump = false;
-                canSprint = false;
-            }
+            // Von Wand wegspringen
+            float wallJumpDirection = spriteRenderer.flipX ? 1f : -1f;
+            rb.linearVelocity = new Vector2(wallJumpDirection * wallJumpForceX, wallJumpForceY);
+        }
+        else if (Input.GetKeyDown(KeyCode.Space) && canJump && stamina >= 15)
+        {
+            UseStamina(10f);
+            isJumping = true;
+            jumpTimeCounter = maxJumpTime;
+            canJump = false;
+            canSprint = false;
         }
 
-        if (Input.GetKey(KeyCode.Space) && isJumping)
+        if (Input.GetKey(KeyCode.Space) && isJumping && !justWallJumped)
         {
             if (jumpTimeCounter > 0)
             {
@@ -133,7 +206,7 @@ public class Player : MonoBehaviour
 
         void staminaRegen()
         {
-            if (canJump)
+            if (canJump || isTouchingWall)
             {
                 staminaRegenTimer -= Time.deltaTime;
 
@@ -150,31 +223,41 @@ public class Player : MonoBehaviour
 
         void gameOver()
         {
-            Application.Quit();
-            EditorApplication.ExitPlaymode();
-            Debug.Log("Vorbei");
+            // Application.Quit();
+            // EditorApplication.ExitPlaymode();
+            health = 10;
+            stamina = 100;
+            transform.position = new Vector3(-29f, 1.3f, 0f);
+            spriteRenderer.color = Color.white;
+            Debug.Log("Reset");
         }
     }
 
     void FixedUpdate()
     {
         // Bewegung
-        if (canMove)
+        if (canMove && !justWallJumped)
         {
-            rb.linearVelocity = new Vector2(move * speed, rb.linearVelocity.y);
+            float currentSpeed = isDashing ? dashSpeed : speed;
+            float dashDirection = spriteRenderer.flipX ? -1f : 1f;
+
+            if (isDashing)
+            {
+                rb.linearVelocity = new Vector2(dashDirection * currentSpeed, rb.linearVelocity.y);
+            }
+            else
+            {
+                rb.linearVelocity = new Vector2(move * currentSpeed, rb.linearVelocity.y);
+            }
         }
 
         // Springen
-        if (isJumping && Input.GetKey(KeyCode.Space))
+        if (isJumping && Input.GetKey(KeyCode.Space) && !justWallJumped)
         {
             if (jumpTimeCounter > 0)
             {
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, holdForce);
             }
-        }
-        else if (Input.GetKeyDown(KeyCode.Space) && (canJump || isTouchingWall) && stamina >= 15)
-        {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         }
 
         // Fast Fall
@@ -203,7 +286,7 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(0.05f);
 
         if (spriteRenderer != null)
-            spriteRenderer.color = Color.blue;
+            spriteRenderer.color = Color.white;
 
         isDamageFlashRunning = false;
     }
@@ -216,26 +299,37 @@ public class Player : MonoBehaviour
             isJumping = false;
             canMove = true;
             canSprint = true;
+            justWallJumped = false;
             print("Spieler Berührt Boden");
         }
 
         if (collision.gameObject.CompareTag("Wand"))
         {
             canMove = true;
-            canJump = true;
             isTouchingWall = true;
+        }
+
+        if (collision.gameObject.CompareTag("Bullet"))
+        {
+            Destroy(collision.gameObject);
+            health -= 1;
+            if (!isDamageFlashRunning)
+                StartCoroutine(DamageFlash());
         }
 
         if (collision.gameObject.CompareTag("Spike"))
         {
             stamina = 100;
-            transform.position = new Vector3(-8f, 0f, 0f);
+            transform.position = new Vector3(-29f, 1.3f, 0f);
             rb.linearVelocity = Vector2.zero;
         }
 
         if (collision.gameObject.CompareTag("Dmg Spike"))
         {
-            health -= 1;
+            health -= 2;
+            if (!isDamageFlashRunning)
+                StartCoroutine(DamageFlash());
+
         }
 
         if (collision.gameObject.CompareTag("Enemy"))
@@ -260,7 +354,7 @@ public class Player : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Wand"))
         {
-            canSprint = true;
+            isTouchingWall = true;
             if (rb.linearVelocity.y < -wallSlide)
                 rb.linearVelocity = new Vector2(0, -wallSlide);
         }
@@ -269,6 +363,14 @@ public class Player : MonoBehaviour
         {
             canJump = true;
         }
+
+        // if (collision.gameObject.CompareTag("Dmg Spike"))
+        // {
+        //     health -= 1;
+        //     if (!isDamageFlashRunning)
+        //         StartCoroutine(DamageFlash());
+
+        // }
     }
 
     void OnCollisionExit2D(Collision2D collision)
@@ -283,7 +385,6 @@ public class Player : MonoBehaviour
         {
             canMove = true;
             isTouchingWall = false;
-            canSprint = false;
         }
 
         if (collision.gameObject.CompareTag("Enemy"))
@@ -291,7 +392,16 @@ public class Player : MonoBehaviour
             canJump = true;
             if (spriteRenderer != null)
             {
-                spriteRenderer.color = Color.blue;
+                spriteRenderer.color = Color.white;
+            }
+        }
+
+        if (collision.gameObject.CompareTag("Dmg Spike"))
+        {
+            canJump = true;
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.color = Color.white;
             }
         }
     }

@@ -9,6 +9,10 @@ TagManager:
   - Enemy
   - Spike
   - Trigger
+  - Dmg Spike
+  - Bullet
+  - Parry
+  - Block
   layers:
   - Default
   - TransparentFX

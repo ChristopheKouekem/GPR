@@ -1,0 +1,663 @@
+fileFormatVersion: 2
+guid: 76b35f010f5e1d247a7b86e918160284
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -3514351430605095270
+    second: tank_rollw_end_0
+  - first:
+      213: 5767544411222366094
+    second: tank_rollw_end_1
+  - first:
+      213: -200215505902506144
+    second: tank_rollw_end_2
+  - first:
+      213: -5412329756285137523
+    second: tank_rollw_end_3
+  - first:
+      213: -4602789234861941097
+    second: tank_rollw_end_4
+  - first:
+      213: 2357334310527584447
+    second: tank_rollw_end_5
+  - first:
+      213: -1994618902732389170
+    second: tank_rollw_end_6
+  - first:
+      213: 7671564713245948408
+    second: tank_rollw_end_7
+  - first:
+      213: 7004300104899396375
+    second: tank_rollw_end_8
+  - first:
+      213: -1476474261394140225
+    second: tank_rollw_end_9
+  - first:
+      213: 775357524424753459
+    second: tank_rollw_end_10
+  - first:
+      213: -3900556630064664154
+    second: tank_rollw_end_11
+  - first:
+      213: 263019678799228850
+    second: tank_rollw_end_12
+  - first:
+      213: -6322039089891426312
+    second: tank_rollw_end_13
+  - first:
+      213: 2626044597060376906
+    second: tank_rollw_end_14
+  - first:
+      213: -3584461698044118749
+    second: tank_rollw_end_15
+  - first:
+      213: 6343307096393540421
+    second: tank_rollw_end_16
+  - first:
+      213: -6686777162826968264
+    second: tank_rollw_end_17
+  - first:
+      213: -1799050927144880834
+    second: tank_rollw_end_18
+  - first:
+      213: 4318434927247427448
+    second: tank_rollw_end_19
+  - first:
+      213: 5579862952558003955
+    second: tank_rollw_end_20
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: tank_rollw_end_0
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 3664
+        width: 442
+        height: 317
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a9eb5e26ef38a3fc0800000000000000
+      internalID: -3514351430605095270
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tank_rollw_end_1
+      rect:
+        serializedVersion: 2
+        x: 523
+        y: 3665
+        width: 438
+        height: 317
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e87d231951f6a0050800000000000000
+      internalID: 5767544411222366094
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tank_rollw_end_2
+      rect:
+        serializedVersion: 2
+        x: 1049
+        y: 3669
+        width: 420
+        height: 315
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06fe724ee01b83df0800000000000000
+      internalID: -200215505902506144
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tank_rollw_end_3
+      rect:
+        serializedVersion: 2
+        x: 1604
+        y: 3677
+        width: 369
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d8d095d23ca83e4b0800000000000000
+      internalID: -5412329756285137523
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tank_rollw_end_4
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 3176
+        width: 337
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79edf08d39b9f10c0800000000000000
+      internalID: -4602789234861941097
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tank_rollw_end_5
+      rect:
+        serializedVersion: 2
+        x: 608
+        y: 3190
+        width: 311
+        height: 310
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb846d3d01fe6b020800000000000000
+      internalID: 2357334310527584447
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tank_rollw_end_6
+      rect:
+        serializedVersion: 2
+        x: 1126
+        y: 3203
+        width: 305
+        height: 308
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec44b580da0b154e0800000000000000
+      internalID: -1994618902732389170
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tank_rollw_end_7
+      rect:
+        serializedVersion: 2
+        x: 1642
+        y: 3210
+        width: 304
+        height: 307
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f93274067fd67a60800000000000000
+      internalID: 7671564713245948408
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tank_rollw_end_8
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 2699
+        width: 290
+        height: 306
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 71382c4c5d5443160800000000000000
+      internalID: 7004300104899396375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tank_rollw_end_9
+      rect:
+        serializedVersion: 2
+        x: 633
+        y: 2693
+        width: 292
+        height: 297
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb358916b72828be0800000000000000
+      internalID: -1476474261394140225
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tank_rollw_end_10
+      rect:
+        serializedVersion: 2
+        x: 1144
+        y: 2681
+        width: 302
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 33183497f8f92ca00800000000000000
+      internalID: 775357524424753459
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tank_rollw_end_11
+      rect:
+        serializedVersion: 2
+        x: 1647
+        y: 2661
+        width: 329
+        height: 307
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a173b639607ed9c0800000000000000
+      internalID: -3900556630064664154
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tank_rollw_end_12
+      rect:
+        serializedVersion: 2
+        x: 123
+        y: 2131
+        width: 301
+        height: 304
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2bfe3cb110f66a300800000000000000
+      internalID: 263019678799228850
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tank_rollw_end_13
+      rect:
+        serializedVersion: 2
+        x: 655
+        y: 2113
+        width: 267
+        height: 316
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ff33ee71fa9348a0800000000000000
+      internalID: -6322039089891426312
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tank_rollw_end_14
+      rect:
+        serializedVersion: 2
+        x: 1090
+        y: 2161
+        width: 306
+        height: 289
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a491e1cc5a5917420800000000000000
+      internalID: 2626044597060376906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tank_rollw_end_15
+      rect:
+        serializedVersion: 2
+        x: 1605
+        y: 2169
+        width: 311
+        height: 298
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3293611b31f614ec0800000000000000
+      internalID: -3584461698044118749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tank_rollw_end_16
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 1660
+        width: 294
+        height: 306
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54360c52234f70850800000000000000
+      internalID: 6343307096393540421
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tank_rollw_end_17
+      rect:
+        serializedVersion: 2
+        x: 581
+        y: 1665
+        width: 327
+        height: 301
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8331185399bc333a0800000000000000
+      internalID: -6686777162826968264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tank_rollw_end_18
+      rect:
+        serializedVersion: 2
+        x: 1057
+        y: 1670
+        width: 363
+        height: 295
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e3531baa6bc7807e0800000000000000
+      internalID: -1799050927144880834
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tank_rollw_end_19
+      rect:
+        serializedVersion: 2
+        x: 1535
+        y: 1648
+        width: 401
+        height: 306
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8770930bfa92eeb30800000000000000
+      internalID: 4318434927247427448
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tank_rollw_end_20
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 1104
+        width: 442
+        height: 317
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f6059ebac7af6d40800000000000000
+      internalID: 5579862952558003955
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      tank_rollw_end_0: -3514351430605095270
+      tank_rollw_end_1: 5767544411222366094
+      tank_rollw_end_10: 775357524424753459
+      tank_rollw_end_11: -3900556630064664154
+      tank_rollw_end_12: 263019678799228850
+      tank_rollw_end_13: -6322039089891426312
+      tank_rollw_end_14: 2626044597060376906
+      tank_rollw_end_15: -3584461698044118749
+      tank_rollw_end_16: 6343307096393540421
+      tank_rollw_end_17: -6686777162826968264
+      tank_rollw_end_18: -1799050927144880834
+      tank_rollw_end_19: 4318434927247427448
+      tank_rollw_end_2: -200215505902506144
+      tank_rollw_end_20: 5579862952558003955
+      tank_rollw_end_3: -5412329756285137523
+      tank_rollw_end_4: -4602789234861941097
+      tank_rollw_end_5: 2357334310527584447
+      tank_rollw_end_6: -1994618902732389170
+      tank_rollw_end_7: 7671564713245948408
+      tank_rollw_end_8: 7004300104899396375
+      tank_rollw_end_9: -1476474261394140225
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
