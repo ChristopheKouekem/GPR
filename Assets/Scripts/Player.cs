@@ -26,6 +26,19 @@ public class Player : MonoBehaviour
     public float wallJumpForceX = 8f;
     public float wallJumpForceY = 8f;
 
+    [Header("Reflect / Parry")]
+    [SerializeField] private float reflectCooldown = 5f;
+    [SerializeField] private float reflectWindow = 0.2f;
+    [SerializeField] private float reflectIgnoreCollisionTime = 0.1f;
+
+    private bool isReflecting = false;
+    private float reflectCooldownTimer = 0f;
+
+    [Header("Block & Parry Colliders")]
+    [SerializeField] private Collider2D parryCollider;
+    [SerializeField] private Collider2D blockCollider;
+    private bool isBlocking = false;
+
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
     private bool isJumping = false;
@@ -49,7 +62,6 @@ public class Player : MonoBehaviour
 
     public TextMeshProUGUI staminaText;
     public TextMeshProUGUI healthText;
-
 
     private bool isDamageFlashRunning = false;
 
@@ -114,7 +126,32 @@ public class Player : MonoBehaviour
             UseStamina(5f * Time.deltaTime);
         }
 
-        // ANIMATOR HEY 
+        // Reflect Cooldown runterzählen
+        if (reflectCooldownTimer > 0f)
+        {
+            reflectCooldownTimer -= Time.deltaTime;
+        }
+
+        // Reflect/Parry (Taste E)
+        if (Input.GetKeyDown(KeyCode.E) && reflectCooldownTimer <= 0f)
+        {
+            StartCoroutine(ReflectWindow());
+        }
+
+        // Block/Parry (Taste W)
+        if (Input.GetKey(KeyCode.W))
+        {
+            isBlocking = true;
+            // Optional: Block Animation
+            // animator.SetBool("isBlocking", true);
+        }
+        else
+        {
+            isBlocking = false;
+            // animator.SetBool("isBlocking", false);
+        }
+
+        // ANIMATOR
         if (move != 0f && canJump)
             animator.SetBool("isWalking", true);
         else
@@ -124,17 +161,19 @@ public class Player : MonoBehaviour
             animator.SetBool("isJumping", true);
         else
             animator.SetBool("isJumping", false);
-        // Running animation 
+
+        // Running animation
         if (speed > 5f && move != 0f && canJump)
             animator.SetBool("isRunning", true);
         else
             animator.SetBool("isRunning", false);
+
         // Jumping animation
         animator.SetBool("isJumping", isJumping && !isTouchingWall);
 
-        //Wallhold animation
-
+        // Wallhold animation
         animator.SetBool("isWallsliding", isTouchingWall);
+
         // Flip Sprite
         if (move < 0f && !justWallJumped)
             spriteRenderer.flipX = true;
@@ -223,8 +262,6 @@ public class Player : MonoBehaviour
 
         void gameOver()
         {
-            // Application.Quit();
-            // EditorApplication.ExitPlaymode();
             health = 10;
             stamina = 100;
             transform.position = new Vector3(-29f, 1.3f, 0f);
@@ -276,6 +313,26 @@ public class Player : MonoBehaviour
         isConsumingStamina = true;
     }
 
+    private IEnumerator ReflectWindow()
+    {
+        isReflecting = true;
+
+        // Optional: Animation Trigger
+        // animator.SetTrigger("parry");
+
+        yield return new WaitForSeconds(reflectWindow);
+
+        isReflecting = false;
+        reflectCooldownTimer = reflectCooldown;
+    }
+
+    private IEnumerator ReenableCollision(Collider2D a, Collider2D b, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (a != null && b != null)
+            Physics2D.IgnoreCollision(a, b, false);
+    }
+
     IEnumerator DamageFlash()
     {
         isDamageFlashRunning = true;
@@ -311,6 +368,39 @@ public class Player : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Bullet"))
         {
+            // Wenn Parry aktiv: Bullet reflektieren, KEIN Schaden
+            if (isReflecting)
+            {
+                Rigidbody2D bulletRb = collision.rigidbody;
+                if (bulletRb != null)
+                {
+                    Vector2 v = bulletRb.linearVelocity;
+
+                    if (v.sqrMagnitude < 0.0001f)
+                    {
+                        v = spriteRenderer.flipX ? Vector2.left : Vector2.right;
+                        bulletRb.linearVelocity = v * 10f;
+                    }
+                    else
+                    {
+                        bulletRb.linearVelocity = -v;
+                    }
+
+                    Collider2D bulletCol = collision.collider;
+                    Collider2D playerCol = GetComponent<Collider2D>();
+                    if (bulletCol != null && playerCol != null)
+                    {
+                        Physics2D.IgnoreCollision(bulletCol, playerCol, true);
+                        StartCoroutine(ReenableCollision(bulletCol, playerCol, reflectIgnoreCollisionTime));
+                    }
+
+                    return;
+                }
+
+                return;
+            }
+
+            // Normal: Bullet weg + Schaden
             Destroy(collision.gameObject);
             health -= 1;
             if (!isDamageFlashRunning)
@@ -329,7 +419,6 @@ public class Player : MonoBehaviour
             health -= 2;
             if (!isDamageFlashRunning)
                 StartCoroutine(DamageFlash());
-
         }
 
         if (collision.gameObject.CompareTag("Enemy"))
@@ -363,14 +452,6 @@ public class Player : MonoBehaviour
         {
             canJump = true;
         }
-
-        // if (collision.gameObject.CompareTag("Dmg Spike"))
-        // {
-        //     health -= 1;
-        //     if (!isDamageFlashRunning)
-        //         StartCoroutine(DamageFlash());
-
-        // }
     }
 
     void OnCollisionExit2D(Collision2D collision)

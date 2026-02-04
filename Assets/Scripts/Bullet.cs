@@ -11,37 +11,40 @@ public class Bullet : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        print("Collided with " + collision.gameObject.name);
-        if (collision.gameObject.CompareTag("Wand"))
-        {
-            Destroy(gameObject);
-        }
-        if (collision.gameObject.CompareTag("Boden"))
-        {
-            Destroy(gameObject);
-        }
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
-            Destroy(gameObject);
-        }
-        if (collision.gameObject.CompareTag("Spike"))
-        {
-            Destroy(gameObject);
-        }
-        if (collision.gameObject.CompareTag("Bullet"))
+        // Zerstöre Bullet bei Wand, Boden, etc.
+        if (collision.gameObject.CompareTag("Wand") || 
+            collision.gameObject.CompareTag("Boden") || 
+            collision.gameObject.CompareTag("Enemy") || 
+            collision.gameObject.CompareTag("Spike") ||
+            collision.gameObject.CompareTag("Bullet"))
         {
             Destroy(gameObject);
         }
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    void OnTriggerEnter2D(Collider2D other)
     {
-        print("Triggered with " + collision.gameObject.name);
-        if (collision.gameObject.CompareTag("Block") && Input.GetKey(KeyCode.W))
+        // Prüfe ob es der Parry oder Block Collider ist
+        if (other.CompareTag("Parry"))
         {
-            Destroy(gameObject);
+            Player player = other.GetComponentInParent<Player>();
+            if (player != null && Input.GetKey(KeyCode.W))
+            {
+                // PARRY: Reflektiere die Bullet
+                if (rb != null)
+                {
+                    rb.linearVelocity = -rb.linearVelocity;
+                }
+            }
+        }
+        else if (other.CompareTag("Block"))
+        {
+            Player player = other.GetComponentInParent<Player>();
+            if (player != null && Input.GetKey(KeyCode.W))
+            {
+                // BLOCK: Zerstöre die Bullet
+                Destroy(gameObject);
+            }
         }
     }
-
-
 }
