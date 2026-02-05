@@ -470,7 +470,7 @@ public class Player : MonoBehaviour
             canJump = true;
             if (spriteRenderer != null)
             {
-                spriteRenderer.color = Color.white;
+                spriteRenderer.color = Color.red;
             }
         }
 
@@ -479,7 +479,7 @@ public class Player : MonoBehaviour
             canJump = true;
             if (spriteRenderer != null)
             {
-                spriteRenderer.color = Color.white;
+                spriteRenderer.color = Color.red;
             }
         }
     }

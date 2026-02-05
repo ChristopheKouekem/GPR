@@ -60,6 +60,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Shooter Left
       objectReference: {fileID: 0}
+    - target: {fileID: 7579166399243886641, guid: 3930bc0efcad80e439f7baad166600c3, type: 3}
+      propertyPath: m_TagString
+      value: Shooter
+      objectReference: {fileID: 0}
     - target: {fileID: 8737736165283104782, guid: 3930bc0efcad80e439f7baad166600c3, type: 3}
       propertyPath: m_FlipY
       value: 1

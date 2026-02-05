@@ -18,7 +18,8 @@ public class Bullet : MonoBehaviour
             collision.gameObject.CompareTag("Boden") ||
             collision.gameObject.CompareTag("Enemy") ||
             collision.gameObject.CompareTag("Spike") ||
-            collision.gameObject.CompareTag("Bullet"))
+            collision.gameObject.CompareTag("Bullet") ||
+            collision.gameObject.CompareTag("Shooter"))
         {
             Destroy(gameObject);
         }

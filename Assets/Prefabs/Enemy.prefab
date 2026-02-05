@@ -171,8 +171,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: -0.01}
-  m_Radius: 10.141662
+  m_Offset: {x: 1.2747905, y: -0.009998846}
+  m_Radius: 14.44406
 --- !u!70 &829166785412863438
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
