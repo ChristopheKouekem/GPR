@@ -23,16 +23,25 @@ public class Player : MonoBehaviour
     public float dashCooldown = 1f;
     public float wallJumpForceX = 8f;
     public float wallJumpForceY = 8f;
-    public float parrytimer = 5f;
 
     [Header("Reflect / Parry")]
-    [SerializeField] private float reflectCooldown = 5f;
     [SerializeField] private float reflectWindow = 0.2f;
     [SerializeField] private float reflectIgnoreCollisionTime = 0.1f;
 
     private bool isReflecting = false;
     private float reflectCooldownTimer = 0f;
-    private float parryActiveTimer = 0f;
+
+    [Header("UI - Parry Cooldown")]
+    [SerializeField] private Image parryCooldownFillImage;     // Filled Image (fillAmount 0..1)
+    [SerializeField] private float parryCooldownDuration = 2f; // 2 Sekunden Cooldown
+
+    [Header("UI - Dash Cooldown")]
+    [SerializeField] private Image dashCooldownFillImage;      // Filled Image (fillAmount 0..1)
+
+    [Header("Parry Object (No Animation)")]
+    [SerializeField] private GameObject parryObject;           // Child "Parry" (SpriteRenderer + BoxCollider2D IsTrigger)
+    [SerializeField] private float parryActiveTime = 0.25f;    // wie lange Parry aktiv ist
+    private Coroutine parryCoroutine;
 
     [Header("Block & Parry Colliders")]
     [SerializeField] private Collider2D parryCollider;
@@ -66,9 +75,6 @@ public class Player : MonoBehaviour
 
     public TextMeshProUGUI staminaText;
     public TextMeshProUGUI healthText;
-    public Image dashBar;
-
-    public Image parri;
 
     private bool isDamageFlashRunning = false;
 
@@ -77,6 +83,17 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         spawnPosition = transform.position;
+
+        // UI initial "bereit"
+        if (parryCooldownFillImage != null)
+            parryCooldownFillImage.fillAmount = 1f;
+
+        if (dashCooldownFillImage != null)
+            dashCooldownFillImage.fillAmount = 1f;
+
+        // Parry Objekt sicher aus
+        if (parryObject != null)
+            parryObject.SetActive(false);
     }
 
     void Update()
@@ -97,9 +114,7 @@ public class Player : MonoBehaviour
         {
             wallJumpControlTimer -= Time.deltaTime;
             if (wallJumpControlTimer <= 0)
-            {
                 justWallJumped = false;
-            }
         }
 
         // Dash
@@ -109,6 +124,10 @@ public class Player : MonoBehaviour
             isDashing = true;
             dashTimer = dashDuration;
             dashCooldownTimer = dashCooldown;
+
+            // Dash UI sofort leer
+            if (dashCooldownFillImage != null)
+                dashCooldownFillImage.fillAmount = 0f;
         }
 
         // Dash Timer
@@ -116,48 +135,61 @@ public class Player : MonoBehaviour
         {
             dashTimer -= Time.deltaTime;
             if (dashTimer <= 0)
-            {
                 isDashing = false;
-            }
         }
 
-        // Dash Cooldown
+        // Dash Cooldown runterzählen
         if (dashCooldownTimer > 0)
-        {
             dashCooldownTimer -= Time.deltaTime;
+
+        // Dash UI updaten
+        if (dashCooldownFillImage != null)
+        {
+            if (dashCooldownTimer <= 0f)
+                dashCooldownFillImage.fillAmount = 1f;
+            else
+                dashCooldownFillImage.fillAmount = Mathf.Clamp01(1f - (dashCooldownTimer / dashCooldown));
         }
 
         // Wand Stamina Verbrauch
         if (isTouchingWall && !canJump)
-        {
             UseStamina(5f * Time.deltaTime);
-        }
 
-        // Reflect Cooldown runterzählen
+        // Parry Cooldown runterzählen
         if (reflectCooldownTimer > 0f)
-        {
             reflectCooldownTimer -= Time.deltaTime;
+
+        // Parry UI updaten
+        if (parryCooldownFillImage != null)
+        {
+            if (reflectCooldownTimer <= 0f)
+                parryCooldownFillImage.fillAmount = 1f;
+            else
+                parryCooldownFillImage.fillAmount = Mathf.Clamp01(1f - (reflectCooldownTimer / parryCooldownDuration));
         }
 
-        // // Parry Active Timer runterzählen
-        // if (parryActiveTimer > 0f)
-        // {
-        //     parryActiveTimer -= Time.deltaTime;
-        //     isReflecting = true;
-        //     spriteRenderer.color = Color.yellow;
-        // }
-        // else
-        // {
-        //     isReflecting = false;
-        //     if (!isDamageFlashRunning)
-        //         spriteRenderer.color = Color.white;
-        // }
-
-
-        if (Input.GetKeyDown(KeyCode.W) && reflectCooldownTimer <= 0f)
+        // Block/Parry (Taste W)
+        if (Input.GetKeyDown(KeyCode.W))
         {
-            parryActiveTimer = reflectWindow;
-            reflectCooldownTimer = reflectCooldown;
+            isBlocking = true;
+            spriteRenderer.color = Color.blue;
+
+            // Parry nur wenn Cooldown bereit
+            if (reflectCooldownTimer <= 0f)
+            {
+                ActivateParry(); // Standbild+Collider kurz aktivieren
+
+                StartCoroutine(ReflectWindow());
+                reflectCooldownTimer = parryCooldownDuration;
+
+                if (parryCooldownFillImage != null)
+                    parryCooldownFillImage.fillAmount = 0f;
+            }
+        }
+        else
+        {
+            isBlocking = false;
+            spriteRenderer.color = Color.white;
         }
 
         // Flip Sprite
@@ -170,19 +202,17 @@ public class Player : MonoBehaviour
         if (Input.GetKey(KeyCode.J))
         {
             UseStamina(10f * Time.deltaTime);
-            //playerAttack();
+            playerAttack();
         }
 
         // Springen
         if (Input.GetKeyDown(KeyCode.Space) && isTouchingWall)
         {
-            // Walljump ohne Stamina Kosten
             isJumping = true;
             jumpTimeCounter = maxJumpTime;
             justWallJumped = true;
             wallJumpControlTimer = wallJumpControlDuration;
 
-            // Von Wand wegspringen
             float wallJumpDirection = spriteRenderer.flipX ? 1f : -1f;
             rb.linearVelocity = new Vector2(wallJumpDirection * wallJumpForceX, wallJumpForceY);
         }
@@ -198,15 +228,12 @@ public class Player : MonoBehaviour
         if (Input.GetKey(KeyCode.Space) && isJumping && !justWallJumped)
         {
             if (jumpTimeCounter > 0)
-            {
                 jumpTimeCounter -= Time.deltaTime;
-            }
         }
 
         if (Input.GetKeyUp(KeyCode.Space))
             isJumping = false;
 
-        // Health Check
         if (health <= 0)
             gameOver();
 
@@ -223,41 +250,25 @@ public class Player : MonoBehaviour
 
         if (healthText != null)
             healthText.text = "Health: " + Mathf.Round(health);
-        if (dashBar != null)
-            dashBar.fillAmount = 1f - (dashCooldownTimer / dashCooldown);
-        if (parri != null)
-            parri.fillAmount = 1f - (reflectCooldownTimer / reflectCooldown);
 
-
-
-
+        // Animator
         bool isGrounded = canJump;
         bool inAir = !canJump;
 
-
         animator.SetBool("isWalking", move != 0f && isGrounded);
-
-
         animator.SetBool("isRunning", speed > 5f && move != 0f && isGrounded);
-
-
         animator.SetBool("isWallsliding", isTouchingWall);
-
-
         animator.SetBool("isJumping", inAir && !isTouchingWall);
-
 
         bool pressingS = Input.GetKey(KeyCode.S);
         bool fallingDown = rb.linearVelocity.y < -0.1f;
         bool doFastFall = pressingS && inAir && fallingDown && !isTouchingWall;
-
         animator.SetBool("isFastFalling", doFastFall);
 
-
-        // void playerAttack()
-        // {
-        //     // attack später
-        // }
+        void playerAttack()
+        {
+            // attack später
+        }
 
         void staminaRegen()
         {
@@ -308,18 +319,38 @@ public class Player : MonoBehaviour
         if (isJumping && Input.GetKey(KeyCode.Space) && !justWallJumped)
         {
             if (jumpTimeCounter > 0)
-            {
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, holdForce);
-            }
         }
 
-        // Fast Fall (Physik)
-        // inAir = !canJump; (hier ohne extra bool, damit es klar ist)
+        // Fast Fall
         if (Input.GetKey(KeyCode.S) && !canJump && !isTouchingWall)
         {
             if (rb.linearVelocity.y > -fastFallSpeed)
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, -fastFallSpeed);
         }
+    }
+
+    private void ActivateParry()
+    {
+        if (parryObject == null) return;
+
+        parryObject.SetActive(true);
+
+
+        if (parryCoroutine != null)
+            StopCoroutine(parryCoroutine);
+
+        parryCoroutine = StartCoroutine(DisableParryAfterTime());
+    }
+
+    private IEnumerator DisableParryAfterTime()
+    {
+        yield return new WaitForSeconds(parryActiveTime);
+
+        if (parryObject != null)
+            parryObject.SetActive(false);
+
+        parryCoroutine = null;
     }
 
     private void UseStamina(float amount)
@@ -330,6 +361,12 @@ public class Player : MonoBehaviour
         isConsumingStamina = true;
     }
 
+    private IEnumerator ReflectWindow()
+    {
+        isReflecting = true;
+        yield return new WaitForSeconds(reflectWindow);
+        isReflecting = false;
+    }
 
     private IEnumerator ReenableCollision(Collider2D a, Collider2D b, float delay)
     {
@@ -439,9 +476,7 @@ public class Player : MonoBehaviour
     void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Boden"))
-        {
             canJump = true;
-        }
 
         if (collision.gameObject.CompareTag("Wand"))
         {
@@ -451,9 +486,7 @@ public class Player : MonoBehaviour
         }
 
         if (collision.gameObject.CompareTag("Enemy"))
-        {
             canJump = true;
-        }
     }
 
     void OnCollisionExit2D(Collision2D collision)
@@ -474,18 +507,14 @@ public class Player : MonoBehaviour
         {
             canJump = true;
             if (spriteRenderer != null)
-            {
-                spriteRenderer.color = Color.red;
-            }
+                spriteRenderer.color = Color.white;
         }
 
         if (collision.gameObject.CompareTag("Dmg Spike"))
         {
             canJump = true;
             if (spriteRenderer != null)
-            {
-                spriteRenderer.color = Color.red;
-            }
+                spriteRenderer.color = Color.white;
         }
     }
 }
