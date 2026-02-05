@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: direction
       value: -1
       objectReference: {fileID: 0}
+    - target: {fileID: -6200364480307136639, guid: 3930bc0efcad80e439f7baad166600c3, type: 3}
+      propertyPath: bulletSpeed
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 2510822925698637942, guid: 3930bc0efcad80e439f7baad166600c3, type: 3}
       propertyPath: m_LocalPosition.x
       value: -8.49

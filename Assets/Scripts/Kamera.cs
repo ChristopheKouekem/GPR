@@ -9,14 +9,6 @@ public class SmoothCamera2D : MonoBehaviour
     [Range(0f, 1f)] public float smoothSpeed = 0.125f; // je kleiner, desto weicher
     public Vector3 offset = new Vector3(0f, 1f, -10f); // z immer negativ für 2D-Kameras
 
-    [Header("Zoom-Einstellungen")]
-    public float orthographicSize = 10f; // Größerer Wert = mehr rausgezoomt
-    public bool smoothZoom = true;
-    [Range(0f, 1f)] public float zoomSmoothSpeed = 0.1f;
-    public float minZoom = 3f; // Maximales Reinzoomen
-    public float maxZoom = 8f; // Maximales Rauszoomen
-    public float zoomSpeed = 2f; // Geschwindigkeit des Zoomens
-
     [Header("Kamerabegrenzungen (optional)")]
     public bool useBounds = false;
     public Vector2 minPosition;
@@ -29,12 +21,9 @@ public class SmoothCamera2D : MonoBehaviour
     private Vector3 _velocity = Vector3.zero;
     private Vector3 _lookAheadPos = Vector3.zero;
     private Vector3 _lastTargetPosition;
-    private Camera _camera;
-    private float _zoomVelocity = 0f;
 
     void Start()
     {
-        _camera = GetComponent<Camera>();
         if (target != null)
             _lastTargetPosition = target.position;
     }
@@ -42,44 +31,6 @@ public class SmoothCamera2D : MonoBehaviour
     void LateUpdate()
     {
         if (target == null) return;
-
-        // Zoom Input (Mausrad oder Q/E Tasten)
-        float scrollInput = Input.GetAxis("Mouse ScrollWheel");
-        if (scrollInput != 0f)
-        {
-            orthographicSize -= scrollInput * zoomSpeed;
-            orthographicSize = Mathf.Clamp(orthographicSize, minZoom, maxZoom);
-        }
-
-        // Alternative: Q und E Tasten für Zoom
-        if (Input.GetKey(KeyCode.Q))
-        {
-            orthographicSize += zoomSpeed * Time.deltaTime;
-            orthographicSize = Mathf.Clamp(orthographicSize, minZoom, maxZoom);
-        }
-        if (Input.GetKey(KeyCode.E))
-        {
-            orthographicSize -= zoomSpeed * Time.deltaTime;
-            orthographicSize = Mathf.Clamp(orthographicSize, minZoom, maxZoom);
-        }
-
-        // Zoom anwenden
-        if (_camera != null)
-        {
-            if (smoothZoom)
-            {
-                _camera.orthographicSize = Mathf.SmoothDamp(
-                    _camera.orthographicSize,
-                    orthographicSize,
-                    ref _zoomVelocity,
-                    zoomSmoothSpeed
-                );
-            }
-            else
-            {
-                _camera.orthographicSize = orthographicSize;
-            }
-        }
 
         // Bewegung des Ziels bestimmen
         Vector3 deltaMove = target.position - _lastTargetPosition;
@@ -91,7 +42,6 @@ public class SmoothCamera2D : MonoBehaviour
             deltaMove.normalized * lookAheadDistance,
             lookAheadSmoothness
         );
-
 
         // Zielposition der Kamera
         Vector3 desiredPosition = target.position + offset + _lookAheadPos;
