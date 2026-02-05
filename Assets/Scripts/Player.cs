@@ -1,8 +1,5 @@
 using UnityEngine;
-using UnityEditor;
-using JetBrains.Annotations;
 using TMPro;
-using UnityEngine.InputSystem;
 using System.Collections;
 
 public class Player : MonoBehaviour
@@ -11,7 +8,7 @@ public class Player : MonoBehaviour
 
     public float stamina = 100;
     public float speed = 5f;
-    public float jumpForce = 5f;
+    public float jumpForce = 5f;            // (in deinem Code nicht genutzt, bleibt drin)
     public float maxJumpTime = 0.2f;
     public float holdForce = 7f;
     public float fastFallSpeed = 7f;
@@ -41,19 +38,23 @@ public class Player : MonoBehaviour
 
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
+
     private bool isJumping = false;
     private bool canJump = false;
     public bool isTouchingWall = false;
     public bool canMove = true;
     public bool canAttack = true;
     public bool canSprint = false;
+
     private float jumpTimeCounter;
     private float staminaRegenTimer = 0.2f;
     private float staminaRegenCooldown = 0.2f;
     private bool isConsumingStamina = false;
+
     private bool isDashing = false;
     private float dashTimer = 0f;
     private float dashCooldownTimer = 0f;
+
     private bool justWallJumped = false;
     private float wallJumpControlTimer = 0f;
     private float wallJumpControlDuration = 0.3f;
@@ -144,29 +145,6 @@ public class Player : MonoBehaviour
             spriteRenderer.color = Color.white;
         }
 
-        // ANIMATOR
-        if (move != 0f && canJump)
-            animator.SetBool("isWalking", true);
-        else
-            animator.SetBool("isWalking", false);
-
-        if (!canJump)
-            animator.SetBool("isJumping", true);
-        else
-            animator.SetBool("isJumping", false);
-
-        // Running animation
-        if (speed > 5f && move != 0f && canJump)
-            animator.SetBool("isRunning", true);
-        else
-            animator.SetBool("isRunning", false);
-
-        // Jumping animation
-        animator.SetBool("isJumping", isJumping && !isTouchingWall);
-
-        // Wallhold animation
-        animator.SetBool("isWallsliding", isTouchingWall);
-
         // Flip Sprite
         if (move < 0f && !justWallJumped)
             spriteRenderer.flipX = true;
@@ -231,6 +209,34 @@ public class Player : MonoBehaviour
         if (healthText != null)
             healthText.text = "Health: " + Mathf.Round(health);
 
+        // =========================
+        // ANIMATOR (aufgeräumt)
+        // =========================
+
+        bool isGrounded = canJump;                 // bei dir ist canJump = "am Boden"
+        bool inAir = !canJump;
+
+        // Walking
+        animator.SetBool("isWalking", move != 0f && isGrounded);
+
+        // Running (bei dir: speed > 5f)
+        animator.SetBool("isRunning", speed > 5f && move != 0f && isGrounded);
+
+        // Wallslide
+        animator.SetBool("isWallsliding", isTouchingWall);
+
+        // Jumping/InAir
+        animator.SetBool("isJumping", inAir && !isTouchingWall);
+
+        // FastFall-ANIMATION (neu)
+        bool pressingS = Input.GetKey(KeyCode.S);
+        bool fallingDown = rb.linearVelocity.y < -0.1f;
+        bool doFastFall = pressingS && inAir && fallingDown && !isTouchingWall;
+
+        animator.SetBool("isFastFalling", doFastFall);
+
+        // =========================
+
         void playerAttack()
         {
             // attack später
@@ -281,7 +287,7 @@ public class Player : MonoBehaviour
             }
         }
 
-        // Springen
+        // Springen halten
         if (isJumping && Input.GetKey(KeyCode.Space) && !justWallJumped)
         {
             if (jumpTimeCounter > 0)
@@ -290,8 +296,9 @@ public class Player : MonoBehaviour
             }
         }
 
-        // Fast Fall
-        if (Input.GetKey(KeyCode.S) && !canJump)
+        // Fast Fall (Physik)
+        // inAir = !canJump; (hier ohne extra bool, damit es klar ist)
+        if (Input.GetKey(KeyCode.S) && !canJump && !isTouchingWall)
         {
             if (rb.linearVelocity.y > -fastFallSpeed)
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, -fastFallSpeed);
@@ -363,7 +370,6 @@ public class Player : MonoBehaviour
         {
             if (isReflecting)
             {
-
                 Rigidbody2D bulletRb = collision.rigidbody;
                 if (bulletRb != null)
                 {
@@ -389,7 +395,6 @@ public class Player : MonoBehaviour
 
                     return;
                 }
-                // else spriteRenderer.color = Color.white;
                 return;
             }
 
