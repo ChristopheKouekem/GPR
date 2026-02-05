@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class Player : MonoBehaviour
 
     public float stamina = 100;
     public float speed = 5f;
-    public float jumpForce = 5f;            // (in deinem Code nicht genutzt, bleibt drin)
+    public float jumpForce = 5f;
     public float maxJumpTime = 0.2f;
     public float holdForce = 7f;
     public float fastFallSpeed = 7f;
@@ -22,6 +23,7 @@ public class Player : MonoBehaviour
     public float dashCooldown = 1f;
     public float wallJumpForceX = 8f;
     public float wallJumpForceY = 8f;
+    public float parrytimer = 5f;
 
     [Header("Reflect / Parry")]
     [SerializeField] private float reflectCooldown = 5f;
@@ -30,6 +32,7 @@ public class Player : MonoBehaviour
 
     private bool isReflecting = false;
     private float reflectCooldownTimer = 0f;
+    private float parryActiveTimer = 0f;
 
     [Header("Block & Parry Colliders")]
     [SerializeField] private Collider2D parryCollider;
@@ -63,6 +66,9 @@ public class Player : MonoBehaviour
 
     public TextMeshProUGUI staminaText;
     public TextMeshProUGUI healthText;
+    public Image dashBar;
+
+    public Image parri;
 
     private bool isDamageFlashRunning = false;
 
@@ -133,16 +139,25 @@ public class Player : MonoBehaviour
             reflectCooldownTimer -= Time.deltaTime;
         }
 
-        // Block/Parry (Taste W)
-        if (Input.GetKeyDown(KeyCode.W))
+        // // Parry Active Timer runterzählen
+        // if (parryActiveTimer > 0f)
+        // {
+        //     parryActiveTimer -= Time.deltaTime;
+        //     isReflecting = true;
+        //     spriteRenderer.color = Color.yellow;
+        // }
+        // else
+        // {
+        //     isReflecting = false;
+        //     if (!isDamageFlashRunning)
+        //         spriteRenderer.color = Color.white;
+        // }
+
+
+        if (Input.GetKeyDown(KeyCode.W) && reflectCooldownTimer <= 0f)
         {
-            isBlocking = true;
-            spriteRenderer.color = Color.blue;
-        }
-        else
-        {
-            isBlocking = false;
-            spriteRenderer.color = Color.white;
+            parryActiveTimer = reflectWindow;
+            reflectCooldownTimer = reflectCooldown;
         }
 
         // Flip Sprite
@@ -155,7 +170,7 @@ public class Player : MonoBehaviour
         if (Input.GetKey(KeyCode.J))
         {
             UseStamina(10f * Time.deltaTime);
-            playerAttack();
+            //playerAttack();
         }
 
         // Springen
@@ -208,39 +223,41 @@ public class Player : MonoBehaviour
 
         if (healthText != null)
             healthText.text = "Health: " + Mathf.Round(health);
+        if (dashBar != null)
+            dashBar.fillAmount = 1f - (dashCooldownTimer / dashCooldown);
+        if (parri != null)
+            parri.fillAmount = 1f - (reflectCooldownTimer / reflectCooldown);
 
-        // =========================
-        // ANIMATOR (aufgeräumt)
-        // =========================
 
-        bool isGrounded = canJump;                 // bei dir ist canJump = "am Boden"
+
+
+        bool isGrounded = canJump;
         bool inAir = !canJump;
 
-        // Walking
+
         animator.SetBool("isWalking", move != 0f && isGrounded);
 
-        // Running (bei dir: speed > 5f)
+
         animator.SetBool("isRunning", speed > 5f && move != 0f && isGrounded);
 
-        // Wallslide
+
         animator.SetBool("isWallsliding", isTouchingWall);
 
-        // Jumping/InAir
+
         animator.SetBool("isJumping", inAir && !isTouchingWall);
 
-        // FastFall-ANIMATION (neu)
+
         bool pressingS = Input.GetKey(KeyCode.S);
         bool fallingDown = rb.linearVelocity.y < -0.1f;
         bool doFastFall = pressingS && inAir && fallingDown && !isTouchingWall;
 
         animator.SetBool("isFastFalling", doFastFall);
 
-        // =========================
 
-        void playerAttack()
-        {
-            // attack später
-        }
+        // void playerAttack()
+        // {
+        //     // attack später
+        // }
 
         void staminaRegen()
         {
@@ -313,18 +330,6 @@ public class Player : MonoBehaviour
         isConsumingStamina = true;
     }
 
-    private IEnumerator ReflectWindow()
-    {
-        isReflecting = true;
-
-        // Optional: Animation Trigger
-        // animator.SetTrigger("parry");
-
-        yield return new WaitForSeconds(reflectWindow);
-
-        isReflecting = false;
-        reflectCooldownTimer = reflectCooldown;
-    }
 
     private IEnumerator ReenableCollision(Collider2D a, Collider2D b, float delay)
     {
