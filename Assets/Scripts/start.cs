@@ -5,15 +5,16 @@ public class MainMenu : MonoBehaviour
 {
     public void StartGame()
     {
-        SceneManager.LoadScene("conf2");
+        SceneManager.LoadScene("tutorial");
 
     }
     
     public void QuitGame()
     {
-        Application.Quit();
+    
+       Application.Quit();
 
-      #if UNITY_EDITOR
+     #if UNITY_EDITOR
     UnityEditor.EditorApplication.isPlaying = false;
     #endif
     }
