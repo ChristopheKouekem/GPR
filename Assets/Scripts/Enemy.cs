@@ -95,6 +95,11 @@ public class Enemy : MonoBehaviour
         knockbackTimer = knockbackStopTime;
 
         animator.SetBool("isRolling", false);
+
+        if (collision.gameObject.CompareTag("Bullet"))
+        {
+            Destroy(gameObject);
+        }
     }
 
     void OnTriggerEnter2D(Collider2D other)

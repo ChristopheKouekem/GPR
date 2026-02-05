@@ -132,23 +132,16 @@ public class Player : MonoBehaviour
             reflectCooldownTimer -= Time.deltaTime;
         }
 
-        // Reflect/Parry (Taste E)
-        if (Input.GetKeyDown(KeyCode.E) && reflectCooldownTimer <= 0f)
-        {
-            StartCoroutine(ReflectWindow());
-        }
-
         // Block/Parry (Taste W)
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.W))
         {
             isBlocking = true;
-            // Optional: Block Animation
-            // animator.SetBool("isBlocking", true);
+            spriteRenderer.color = Color.blue;
         }
         else
         {
             isBlocking = false;
-            // animator.SetBool("isBlocking", false);
+            spriteRenderer.color = Color.white;
         }
 
         // ANIMATOR
@@ -368,9 +361,9 @@ public class Player : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Bullet"))
         {
-            // Wenn Parry aktiv: Bullet reflektieren, KEIN Schaden
             if (isReflecting)
             {
+
                 Rigidbody2D bulletRb = collision.rigidbody;
                 if (bulletRb != null)
                 {
@@ -396,11 +389,10 @@ public class Player : MonoBehaviour
 
                     return;
                 }
-
+                // else spriteRenderer.color = Color.white;
                 return;
             }
 
-            // Normal: Bullet weg + Schaden
             Destroy(collision.gameObject);
             health -= 1;
             if (!isDamageFlashRunning)
