@@ -369,10 +369,13 @@ MonoBehaviour:
   dashCooldown: 0.8
   wallJumpForceX: 8
   wallJumpForceY: 15
-  parrytimer: 2
-  reflectCooldown: 1000
   reflectWindow: 0.2
   reflectIgnoreCollisionTime: 0.1
+  parryCooldownFillImage: {fileID: 234984162330815553}
+  parryCooldownDuration: 2
+  dashCooldownFillImage: {fileID: 4483348294743127902}
+  parryObject: {fileID: 0}
+  parryActiveTime: 0.25
   parryCollider: {fileID: 3095554554228410233}
   blockCollider: {fileID: 0}
   isTouchingWall: 0
@@ -381,8 +384,6 @@ MonoBehaviour:
   canSprint: 1
   staminaText: {fileID: 186561999100426098}
   healthText: {fileID: 3229790505185114280}
-  dashBar: {fileID: 4483348294743127902}
-  parri: {fileID: 234984162330815553}
 --- !u!61 &7725229237376533512
 BoxCollider2D:
   m_ObjectHideFlags: 0

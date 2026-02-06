@@ -27,7 +27,7 @@ public class Enemy : MonoBehaviour
         if (animator == null)
             animator = GetComponent<Animator>();
 
-        // ✅ Start immer Idle
+
         isChasing = false;
         player = null;
         animator.SetBool("isRolling", false);
@@ -49,7 +49,7 @@ public class Enemy : MonoBehaviour
         {
             direction = (player.position - transform.position).normalized;
 
-            // ✅ FLIP HIER (richtiger Spot)
+
             if (direction.x > 0.01f)
                 sr.flipX = false; // schaut nach rechts
             else if (direction.x < -0.01f)
@@ -60,7 +60,6 @@ public class Enemy : MonoBehaviour
             direction = Vector3.zero;
         }
 
-        // ✅ Roll-Animation nur beim Chasen
         animator.SetBool("isRolling", isChasing && player != null);
     }
 

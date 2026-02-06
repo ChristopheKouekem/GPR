@@ -13,7 +13,6 @@ public class Bullet : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        // Zerstöre Bullet bei Wand, Boden, etc.
         if (collision.gameObject.CompareTag("Wand") ||
             collision.gameObject.CompareTag("Boden") ||
             collision.gameObject.CompareTag("Enemy") ||
@@ -46,8 +45,6 @@ public class Bullet : MonoBehaviour
             Player player = other.GetComponentInParent<Player>();
             if (player != null && Input.GetKey(KeyCode.W))
             {
-
-
                 Destroy(gameObject);
             }
 

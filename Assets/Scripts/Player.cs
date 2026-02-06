@@ -76,6 +76,8 @@ public class Player : MonoBehaviour
     public TextMeshProUGUI staminaText;
     public TextMeshProUGUI healthText;
 
+
+
     private bool isDamageFlashRunning = false;
 
     void Start()
