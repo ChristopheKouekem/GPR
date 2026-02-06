@@ -355,7 +355,7 @@ MonoBehaviour:
   animator: {fileID: 499272884715146218}
   stamina: 100
   speed: 10
-  jumpForce: 11
+  jumpForce: 15
   maxJumpTime: 0.2
   holdForce: 7.5
   fastFallSpeed: 10

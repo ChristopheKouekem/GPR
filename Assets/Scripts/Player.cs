@@ -2,6 +2,8 @@ using UnityEngine;
 using TMPro;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEditor.SearchService;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -291,11 +293,22 @@ public class Player : MonoBehaviour
 
         void gameOver()
         {
-            health = 10;
-            stamina = 100;
-            transform.position = new Vector3(-29f, 1.3f, 0f);
-            spriteRenderer.color = Color.white;
-            Debug.Log("Reset");
+            if (SceneManager.GetActiveScene().name == "Game")
+            {
+                transform.position = new Vector3(1f, 17f, 0f);
+                rb.linearVelocity = Vector2.zero;
+                health = 10;
+                stamina = 100;
+            }
+            else
+            {
+                health = 10;
+                stamina = 100;
+                transform.position = new Vector3(-29f, 1.3f, 0f);
+                spriteRenderer.color = Color.white;
+                Debug.Log("Reset");
+            }
+
         }
     }
 
@@ -454,6 +467,12 @@ public class Player : MonoBehaviour
             transform.position = new Vector3(-29f, 1.3f, 0f);
             rb.linearVelocity = Vector2.zero;
         }
+
+        // if (collision.gameObject.CompareTag("other"))
+        // {
+        //     health -= 1;
+
+        // }
 
         if (collision.gameObject.CompareTag("Dmg Spike"))
         {

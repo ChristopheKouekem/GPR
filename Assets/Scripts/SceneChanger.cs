@@ -11,5 +11,10 @@ public class SceneChanger : MonoBehaviour
         {
             SceneManager.LoadScene("tutorial");
         }
+
+        if (other.CompareTag("finish"))
+        {
+            SceneManager.LoadScene("Finish");
+        }
     }
 }
