@@ -5,17 +5,25 @@ public class MainMenu : MonoBehaviour
 {
     public void StartGame()
     {
-        SceneManager.LoadScene("tutorial");
+        SceneManager.LoadScene("Tutorial");
 
     }
-    
+
     public void QuitGame()
     {
-    
-       Application.Quit();
 
-     #if UNITY_EDITOR
-    UnityEditor.EditorApplication.isPlaying = false;
-    #endif
+        Application.Quit();
+
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+    }
+
+    void OnollisionEnter2D(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            SceneManager.LoadScene("Game");
+        }
     }
 }

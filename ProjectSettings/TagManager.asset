@@ -14,6 +14,7 @@ TagManager:
   - Parry
   - Block
   - Shooter
+  - new level
   layers:
   - Default
   - TransparentFX
